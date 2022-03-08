@@ -14,7 +14,7 @@ const Header = styled.div`
 const Grid = styled.div`
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 `;
 
 const Pokedex = ({ pokemons, loading }) => {

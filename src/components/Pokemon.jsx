@@ -1,25 +1,59 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Card = styled.div``;
+const Card = styled.div`
+  display: flex;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+`;
 
-const CardBody = styled.div``;
+const CardBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 10px 10px 0;
+  flex: 1;
+`;
 
-const CardTop = styled.div``;
+const CardBottom = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
 
-const CardBottom = styled.div``;
+const CardTop = styled(CardBottom)`
+  h3 {
+    text-transform: capitalize;
+  }
+`;
 
-const ImageContainer = styled.div``;
+const ImageContainer = styled.div`
+  padding: 0 5px;
+`;
 
-const Type = styled.div``;
+const Image = styled.img`
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+`;
 
-const TypeName = styled.div``;
+const Type = styled.div`
+  display: flex;
+`;
+
+const TypeName = styled.div`
+  margin-right: 10px;
+  text-transform: uppercase;
+`;
+
+const FavoriteButton = styled.button``;
 
 const Pokemon = ({ id, name, types, image }) => {
   return (
     <Card>
       <ImageContainer>
-        <img src={image} alt={name} />
+        <Image src={image} alt={name} />
       </ImageContainer>
       <CardBody>
         <CardTop>
@@ -32,6 +66,7 @@ const Pokemon = ({ id, name, types, image }) => {
               return <TypeName key={index}>{item.type.name}</TypeName>;
             })}
           </Type>
+          <FavoriteButton>&#9829;</FavoriteButton>
         </CardBottom>
       </CardBody>
     </Card>
