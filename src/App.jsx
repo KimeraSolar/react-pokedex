@@ -12,6 +12,9 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [pokemons, setPokemons] = useState([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const itemsPerPage = 30;
 
   const normalizePokemons = (pokemonArray) => {
     return Promise.all(
@@ -34,6 +37,7 @@ function App() {
       const response = await getPokemons(params);
       const normalizedPokemons = await normalizePokemons(response.results);
       setPokemons(normalizedPokemons);
+      setTotalPages(Math.ceil(response.count / itemsPerPage));
     } catch (error) {
       console.log('fetchPokemon error:', error);
     } finally {
@@ -42,11 +46,13 @@ function App() {
   };
 
   const handlePageChange = (newPage) => {
-    setPage(newPage);
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
 
   useEffect(() => {
-    fetchPokemon({ offset: page - 1 });
+    fetchPokemon({ offset: page - 1, limit: itemsPerPage });
     console.log('page change');
   }, [page]);
 
@@ -54,21 +60,13 @@ function App() {
     <div>
       <Navbar />
       <Searchbar />
-      <button
-        onClick={() => {
-          handlePageChange(page + 1);
-        }}
-      >
-        Próxima página
-      </button>
-      <button
-        onClick={() => {
-          handlePageChange(page - 1);
-        }}
-      >
-        Página anterior
-      </button>
-      <Pokedex pokemons={pokemons} loading={loading} />
+      <Pokedex
+        pokemons={pokemons}
+        loading={loading}
+        page={page}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+      />
     </div>
   );
 }

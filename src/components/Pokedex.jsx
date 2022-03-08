@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Pagination from './Pagination';
 
 import Pokemon from './Pokemon';
 
@@ -17,12 +18,19 @@ const Grid = styled.div`
   grid-template-columns: repeat(3, 1fr);
 `;
 
-const Pokedex = ({ pokemons, loading }) => {
+const Pokedex = ({ pokemons, loading, page, totalPages, handlePageChange }) => {
   return (
     <div>
       <Header>
         <h1>Pokedex</h1>
-        <div>Paginação:</div>
+        <div>
+          Paginação:
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
+        </div>
       </Header>
       {loading && <div>Carregando, segura fera...</div>}
       {!loading && (
