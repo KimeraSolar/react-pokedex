@@ -7,12 +7,14 @@ import { getPokemons, searchPokemon } from './api';
 import Navbar from './components/Navbar';
 import Pokedex from './components/Pokedex';
 import Searchbar from './components/Searchbar';
+import { FavoritedProvider } from './contexts/favoritedContext';
 
 function App() {
   const [loading, setLoading] = useState(false);
   const [pokemons, setPokemons] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [favorited, setFavorited] = useState([]);
 
   const itemsPerPage = 30;
 
@@ -56,8 +58,24 @@ function App() {
     console.log('page change');
   }, [page]);
 
+  const updateFavoritedPokemons = (name) => {
+    const updatedFavorites = [...favorited];
+    const favoritedIndex = updatedFavorites.indexOf(name);
+    if (favoritedIndex >= 0) {
+      updatedFavorites.splice(favoritedIndex, 1);
+    } else {
+      updatedFavorites.push(name);
+    }
+    setFavorited(updatedFavorites);
+  };
+
   return (
-    <div>
+    <FavoritedProvider
+      value={{
+        favoritedPokemons: favorited,
+        updateFavoritedPokemons: updateFavoritedPokemons,
+      }}
+    >
       <Navbar />
       <Searchbar />
       <Pokedex
@@ -67,7 +85,7 @@ function App() {
         totalPages={totalPages}
         handlePageChange={handlePageChange}
       />
-    </div>
+    </FavoritedProvider>
   );
 }
 
