@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { searchPokemon } from '../api';
-import Pokemon from './Pokemon';
-
 const SearchbarContainer = styled.div`
   display: flex;
   margin: 0 auto;
@@ -34,15 +31,13 @@ const Button = styled.button`
 
 const Searchbar = ({ onSearch }) => {
   const [search, setSearch] = useState('');
-  const [pokemon, setPokemon] = useState(null);
 
   const onChangeHandler = (e) => {
     setSearch(e.target.value);
   };
 
-  const onSearchHandler = async () => {
-    const result = await searchPokemon(search);
-    setPokemon(result);
+  const onSearchHandler = () => {
+    onSearch(search);
   };
 
   return (
@@ -57,15 +52,6 @@ const Searchbar = ({ onSearch }) => {
       <div>
         <Button onClick={onSearchHandler}>Buscar</Button>
       </div>
-
-      {pokemon && (
-        <Pokemon
-          id={pokemon.id}
-          name={pokemon.name}
-          types={pokemon.types}
-          image={pokemon.sprites.front_default}
-        />
-      )}
     </SearchbarContainer>
   );
 };

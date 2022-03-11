@@ -17,24 +17,43 @@ function App() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [favorited, setFavorited] = useState([]);
+  const [searching, setSearching] = useState(false);
 
   const itemsPerPage = 30;
 
   const normalizePokemons = (pokemonArray) => {
     return Promise.all(
       pokemonArray.map(async (pokemon) => {
-        const pokemonUrl = pokemon.url.split('/');
-        const pokemonId = pokemonUrl[pokemonUrl.length - 2];
-        const response = await searchPokemon(pokemonId);
-        const { id, types, sprites } = response;
+        const response = await searchPokemon(pokemon.name);
+        const { id, species, types, sprites } = response;
         return {
           id,
-          name: pokemon.name,
+          name: species.name,
           types,
           image: sprites.front_default,
         };
       })
     );
+  };
+
+  const onSearchHandler = async (pokemon) => {
+    if (!pokemon)
+      return await fetchPokemon({ offset: page - 1, limit: itemsPerPage });
+
+    setLoading(true);
+    setSearching(true);
+    setPage(1);
+    setTotalPages(1);
+
+    const result = await searchPokemon(pokemon);
+    if (!result) {
+      setPokemons([]);
+    } else {
+      const normalizedPokemon = await normalizePokemons([result]);
+      setPokemons(normalizedPokemon);
+    }
+    setLoading(false);
+    setSearching(false);
   };
 
   const handlePageChange = (newPage) => {
@@ -48,27 +67,29 @@ function App() {
     if (pokemons) setFavorited(pokemons);
   };
 
+  const fetchPokemon = async (params = {}) => {
+    setLoading(true);
+    try {
+      const response = await getPokemons(params);
+      const normalizedPokemons = await normalizePokemons(response.results);
+      setPokemons(normalizedPokemons);
+      setTotalPages(Math.ceil(response.count / itemsPerPage));
+    } catch (error) {
+      console.log('fetchPokemon error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadFavoritedPokemons();
   }, []);
 
   useEffect(() => {
-    const fetchPokemon = async (params = {}) => {
-      setLoading(true);
-      try {
-        const response = await getPokemons(params);
-        const normalizedPokemons = await normalizePokemons(response.results);
-        setPokemons(normalizedPokemons);
-        setTotalPages(Math.ceil(response.count / itemsPerPage));
-      } catch (error) {
-        console.log('fetchPokemon error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPokemon({ offset: page - 1, limit: itemsPerPage });
+    if (!searching) fetchPokemon({ offset: page - 1, limit: itemsPerPage });
   }, [page]);
+
+  useEffect(() => {}, [pokemons]);
 
   const updateFavoritedPokemons = (name) => {
     const updatedFavorites = [...favorited];
@@ -90,7 +111,7 @@ function App() {
       }}
     >
       <Navbar />
-      <Searchbar />
+      <Searchbar onSearch={onSearchHandler} />
       <Pokedex
         pokemons={pokemons}
         loading={loading}

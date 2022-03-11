@@ -18,6 +18,12 @@ const Grid = styled.div`
   grid-template-columns: repeat(3, 1fr);
 `;
 
+const NotFound = styled.div`
+  text-align: center;
+  font-size: 1.25rem;
+  padding: 20px;
+`;
+
 const Pokedex = ({ pokemons, loading, page, totalPages, handlePageChange }) => {
   return (
     <div>
@@ -33,7 +39,10 @@ const Pokedex = ({ pokemons, loading, page, totalPages, handlePageChange }) => {
         </div>
       </Header>
       {loading && <div>Carregando, segura fera...</div>}
-      {!loading && (
+      {!loading && !pokemons.length && (
+        <NotFound>Nada pra ver aqui...</NotFound>
+      )}
+      {!loading && pokemons.length > 0 && (
         <Grid>
           {pokemons.map((pokemon, index) => {
             const { id, name, image, types } = pokemon;
