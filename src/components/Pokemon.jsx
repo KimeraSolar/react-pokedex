@@ -50,6 +50,11 @@ const TypeName = styled.div`
 
 const FavoriteButton = styled.button`
   color: ${({ isFavorited }) => (isFavorited ? 'red' : 'black')};
+  border: none;
+  background-color: transparent;
+  padding: 4px;
+  font-size: 1.25rem;
+  cursor: pointer;
 `;
 
 const Pokemon = ({ id, name, types, image }) => {
