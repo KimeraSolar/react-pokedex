@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FavoritedContext from '../contexts/favoritedContext';
 
@@ -61,6 +61,13 @@ const Pokemon = ({ id, name, types, image }) => {
     updateFavoritedPokemons(name);
     setFavorited(!favorited);
   };
+
+  useEffect(() => {
+    const favoritedPokemons = JSON.parse(
+      window.localStorage.getItem('favoritedPokemon')
+    );
+    if (favoritedPokemons.includes(name)) setFavorited(true);
+  }, [name]);
 
   return (
     <Card>

@@ -9,6 +9,8 @@ import Pokedex from './components/Pokedex';
 import Searchbar from './components/Searchbar';
 import { FavoritedProvider } from './contexts/favoritedContext';
 
+const favoritedKey = 'favoritedPokemon';
+
 function App() {
   const [loading, setLoading] = useState(false);
   const [pokemons, setPokemons] = useState([]);
@@ -33,27 +35,36 @@ function App() {
     );
   };
 
-  const fetchPokemon = async (params = {}) => {
-    setLoading(true);
-    try {
-      const response = await getPokemons(params);
-      const normalizedPokemons = await normalizePokemons(response.results);
-      setPokemons(normalizedPokemons);
-      setTotalPages(Math.ceil(response.count / itemsPerPage));
-    } catch (error) {
-      console.log('fetchPokemon error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
 
+  const loadFavoritedPokemons = () => {
+    const pokemons = JSON.parse(window.localStorage.getItem(favoritedKey));
+    if (pokemons) setFavorited(pokemons);
+  };
+
   useEffect(() => {
+    loadFavoritedPokemons();
+  }, []);
+
+  useEffect(() => {
+    const fetchPokemon = async (params = {}) => {
+      setLoading(true);
+      try {
+        const response = await getPokemons(params);
+        const normalizedPokemons = await normalizePokemons(response.results);
+        setPokemons(normalizedPokemons);
+        setTotalPages(Math.ceil(response.count / itemsPerPage));
+      } catch (error) {
+        console.log('fetchPokemon error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPokemon({ offset: page - 1, limit: itemsPerPage });
     console.log('page change');
   }, [page]);
@@ -66,6 +77,7 @@ function App() {
     } else {
       updatedFavorites.push(name);
     }
+    window.localStorage.setItem(favoritedKey, JSON.stringify(updatedFavorites));
     setFavorited(updatedFavorites);
   };
 
