@@ -1,6 +1,5 @@
-export const searchPokemon = async (pokemon) => {
+export const fetchPokemon = async (url) => {
   try {
-    const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
     const response = await fetch(url);
     return await response.json();
   } catch (error) {
@@ -8,13 +7,21 @@ export const searchPokemon = async (pokemon) => {
   }
 };
 
+export const searchPokemon = async (pokemon) => {
+  try {
+    const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
+    return await fetchPokemon(url);
+  } catch (error) {
+    console.log('Error:', error);
+  }
+};
+
 export const getPokemons = async ({ offset = 0, limit = 50 }) => {
   try {
-    const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${
+    const url = `https://pokeapi.co/api/v2/pokemon-species?limit=${limit}&offset=${
       limit * offset
     }`;
-    const response = await fetch(url);
-    return await response.json();
+    return await fetchPokemon(url);
   } catch (error) {
     console.log('Error:', error);
   }

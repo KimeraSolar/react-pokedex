@@ -23,11 +23,13 @@ function App() {
   const normalizePokemons = (pokemonArray) => {
     return Promise.all(
       pokemonArray.map(async (pokemon) => {
-        const response = await searchPokemon(pokemon.name);
-        const { id, name, types, sprites } = response;
+        const pokemonUrl = pokemon.url.split('/');
+        const pokemonId = pokemonUrl[pokemonUrl.length - 2];
+        const response = await searchPokemon(pokemonId);
+        const { id, types, sprites } = response;
         return {
           id,
-          name,
+          name: pokemon.name,
           types,
           image: sprites.front_default,
         };
@@ -66,7 +68,6 @@ function App() {
     };
 
     fetchPokemon({ offset: page - 1, limit: itemsPerPage });
-    console.log('page change');
   }, [page]);
 
   const updateFavoritedPokemons = (name) => {
