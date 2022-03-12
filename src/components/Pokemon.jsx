@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FavoritedContext from '../contexts/favoritedContext';
+import FavoritedButton from './FavoritedButton';
 
 const Card = styled.div`
   display: flex;
@@ -48,15 +49,6 @@ const TypeName = styled.div`
   text-transform: uppercase;
 `;
 
-const FavoriteButton = styled.button`
-  color: ${({ isFavorited }) => (isFavorited ? 'red' : 'black')};
-  border: none;
-  background-color: transparent;
-  padding: 4px;
-  font-size: 1.25rem;
-  cursor: pointer;
-`;
-
 const Pokemon = ({ id, name, types, image }) => {
   const [favorited, setFavorited] = useState(false);
 
@@ -90,9 +82,9 @@ const Pokemon = ({ id, name, types, image }) => {
               return <TypeName key={index}>{item.type.name}</TypeName>;
             })}
           </Type>
-          <FavoriteButton isFavorited={favorited} onClick={favoriteHandler}>
+          <FavoritedButton isFavorited={favorited} onClick={favoriteHandler}>
             &#9829;
-          </FavoriteButton>
+          </FavoritedButton>
         </CardBottom>
       </CardBody>
     </Card>

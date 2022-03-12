@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import FavoritedContext from '../contexts/favoritedContext';
+import FavoritedButton from './FavoritedButton';
 
 const Nav = styled.nav`
   height: 100px;
@@ -24,7 +25,9 @@ const Navbar = () => {
       <div>
         <NavbarImg alt="pokeapi-logo" src={logoImg} className="navbar-img" />
       </div>
-      <div>&#9829; {favoritedPokemons.length}</div>
+      <FavoritedButton isFavorited={true}>
+        {favoritedPokemons.length} &#9829;
+      </FavoritedButton>
     </Nav>
   );
 };
