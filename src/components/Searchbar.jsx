@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const SearchbarContainer = styled.div`
   display: flex;
-  margin: 0 auto;
-  padding: 0 20px;
+  margin: 0;
   align-items: center;
 `;
 

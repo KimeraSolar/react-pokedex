@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Pagination from './Pagination';
 
 import Pokemon from './Pokemon';
 
@@ -24,19 +23,11 @@ const NotFound = styled.div`
   padding: 20px;
 `;
 
-const Pokedex = ({ pokemons, loading, page, totalPages, handlePageChange }) => {
+const Pokedex = ({ pokemons, loading }) => {
   return (
     <div>
       <Header>
         <h1>Pokedex</h1>
-        <div>
-          Paginação:
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-          />
-        </div>
       </Header>
       {loading && <div>Carregando, segura fera...</div>}
       {!loading && !pokemons.length && (

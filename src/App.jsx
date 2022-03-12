@@ -1,15 +1,23 @@
 import './App.css';
 
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 import { getPokemons, searchPokemon } from './api';
+import { FavoritedProvider } from './contexts/favoritedContext';
 
 import Navbar from './components/Navbar';
 import Pokedex from './components/Pokedex';
 import Searchbar from './components/Searchbar';
-import { FavoritedProvider } from './contexts/favoritedContext';
+import Pagination from './components/Pagination';
 
 const favoritedKey = 'favoritedPokemon';
+
+const TopBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -114,11 +122,18 @@ function App() {
       }}
     >
       <Navbar />
-      <Searchbar
-        search={search}
-        setSearch={setSearch}
-        onSearch={onSearchHandler}
-      />
+      <TopBar>
+        <Searchbar
+          search={search}
+          setSearch={setSearch}
+          onSearch={onSearchHandler}
+        />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
+      </TopBar>
       <Pokedex
         pokemons={pokemons}
         loading={loading}
