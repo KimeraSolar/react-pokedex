@@ -29,15 +29,13 @@ const Button = styled.button`
   padding: 10px 12px;
 `;
 
-const Searchbar = ({ onSearch }) => {
-  const [search, setSearch] = useState('');
-
+const Searchbar = ({ search, setSearch, onSearch }) => {
   const onChangeHandler = (e) => {
     setSearch(e.target.value);
   };
 
   const onSearchHandler = () => {
-    onSearch(search);
+    onSearch(search, true);
   };
 
   const onKeyPressHandler = (event) => {

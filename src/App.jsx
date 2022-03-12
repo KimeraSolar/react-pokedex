@@ -18,42 +18,44 @@ function App() {
   const [totalPages, setTotalPages] = useState(1);
   const [favorited, setFavorited] = useState([]);
   const [searching, setSearching] = useState(false);
+  const [search, setSearch] = useState('');
 
   const itemsPerPage = 30;
 
   const normalizePokemons = (pokemonArray) => {
-    return Promise.all(
-      pokemonArray.map(async (pokemon) => {
-        const response = await searchPokemon(pokemon.name);
-        const { id, species, types, sprites } = response;
-        return {
-          id,
-          name: species.name,
-          types,
-          image: sprites.front_default,
-        };
-      })
-    );
+    return pokemonArray.map((pokemon) => {
+      const { id, species, types, sprites } = pokemon;
+      return {
+        id,
+        name: species.name,
+        types,
+        image: sprites.front_default,
+      };
+    });
   };
 
-  const onSearchHandler = async (pokemon) => {
-    if (!pokemon)
+  const onSearchHandler = async (pokemon, newSearch) => {
+    if (!pokemon) {
+      setSearching(false);
       return await fetchPokemon({ offset: page - 1, limit: itemsPerPage });
+    }
 
     setLoading(true);
     setSearching(true);
-    setPage(1);
-    setTotalPages(1);
 
-    const result = await searchPokemon(pokemon);
-    if (!result) {
-      setPokemons([]);
-    } else {
-      const normalizedPokemon = await normalizePokemons([result]);
-      setPokemons(normalizedPokemon);
+    if (newSearch) {
+      setPage(1);
     }
+
+    const result = await searchPokemon({
+      pokemon,
+      offset: page - 1,
+      limit: itemsPerPage,
+    });
+    const normalizedPokemon = normalizePokemons(result.results);
+    setPokemons(normalizedPokemon);
+    setTotalPages(Math.ceil(result.count / itemsPerPage));
     setLoading(false);
-    setSearching(false);
   };
 
   const handlePageChange = (newPage) => {
@@ -71,7 +73,7 @@ function App() {
     setLoading(true);
     try {
       const response = await getPokemons(params);
-      const normalizedPokemons = await normalizePokemons(response.results);
+      const normalizedPokemons = normalizePokemons(response.results);
       setPokemons(normalizedPokemons);
       setTotalPages(Math.ceil(response.count / itemsPerPage));
     } catch (error) {
@@ -87,6 +89,7 @@ function App() {
 
   useEffect(() => {
     if (!searching) fetchPokemon({ offset: page - 1, limit: itemsPerPage });
+    else onSearchHandler(search, false);
   }, [page]);
 
   useEffect(() => {}, [pokemons]);
@@ -111,7 +114,11 @@ function App() {
       }}
     >
       <Navbar />
-      <Searchbar onSearch={onSearchHandler} />
+      <Searchbar
+        search={search}
+        setSearch={setSearch}
+        onSearch={onSearchHandler}
+      />
       <Pokedex
         pokemons={pokemons}
         loading={loading}

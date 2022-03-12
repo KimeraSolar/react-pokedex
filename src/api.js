@@ -1,27 +1,11 @@
-export const fetchPokemon = async (url) => {
-  try {
-    const response = await fetch(url);
-    return response;
-  } catch (error) {
-    console.log('Error:', error);
-  }
-};
+const API_URL = 'http://localhost:3003';
 
-export const searchPokemon = async (pokemon) => {
+export const searchPokemon = async ({ pokemon, offset, limit }) => {
   try {
-    let url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
-    let result = await fetchPokemon(url);
-    let resultJson = result.status === 200 ? await result.json() : {};
-
-    url = resultJson.species
-      ? resultJson.species.url
-      : `https://pokeapi.co/api/v2/pokemon-species/${pokemon}`;
-    result = await fetchPokemon(url);
-    resultJson = await result.json();
-    const defaultVariety = resultJson.varieties.filter(
-      (variety) => variety.is_default
-    );
-    result = await fetchPokemon(defaultVariety[0].pokemon.url);
+    let url = `${API_URL}/search-pokemon?pokemon=${pokemon}&offset=${
+      limit * offset
+    }&limit=${limit}`;
+    let result = await fetch(url);
     return await result.json();
   } catch (error) {
     console.log('Error:', error);
@@ -30,10 +14,10 @@ export const searchPokemon = async (pokemon) => {
 
 export const getPokemons = async ({ offset = 0, limit = 50 } = {}) => {
   try {
-    const url = `https://pokeapi.co/api/v2/pokemon-species?limit=${limit}&offset=${
+    const url = `${API_URL}/get-pokemons?limit=${limit}&offset=${
       limit * offset
     }`;
-    const result = await fetchPokemon(url);
+    const result = await fetch(url);
     return await result.json();
   } catch (error) {
     console.log('Error:', error);
