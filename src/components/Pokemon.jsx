@@ -73,7 +73,7 @@ const Pokemon = ({ id, name, types, image }) => {
       </ImageContainer>
       <CardBody>
         <CardTop>
-          <h3>{name}</h3>
+          <h3>{name.replace('-', ' ')}</h3>
           <div>{`#${id}`}</div>
         </CardTop>
         <CardBottom>
