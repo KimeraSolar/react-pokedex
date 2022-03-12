@@ -40,12 +40,17 @@ const Searchbar = ({ onSearch }) => {
     onSearch(search);
   };
 
+  const onKeyPressHandler = (event) => {
+    if (event.key === 'Enter') onSearch(search);
+  };
+
   return (
     <SearchbarContainer>
       <InputWrapper>
         <Input
           placeholder="Buscar pokémon"
           onChange={onChangeHandler}
+          onKeyPress={onKeyPressHandler}
           value={search}
         />
       </InputWrapper>
