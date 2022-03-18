@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import FavoritedContext from '../contexts/favoritedContext';
 import FavoritedButton from './FavoritedButton';
+import Searchbar from './Searchbar';
 
 const Nav = styled.nav`
   height: 100px;
@@ -16,16 +18,52 @@ const NavbarImg = styled.img`
 `;
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   const { favoritedPokemons } = useContext(FavoritedContext);
+  const [search, setSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const logoImg =
     'https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png';
+
+  const onSearchHandler = (search) => {
+    if (search) {
+      setSearchParams({ search, page: 1 });
+    } else {
+      setSearchParams({ page: 1 });
+    }
+  };
+
+  const onFavoritesHandler = () => {
+    setSearch('');
+    searchParams.delete('search');
+    searchParams.set('showFavorites', true);
+    searchParams.set('page', 1);
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (!search) navigate('/dex?page=1');
+  }, []);
+
+  useEffect(() => {
+    const search = searchParams.get('search');
+    if (search) setSearch(search);
+    else setSearch('');
+  }, [searchParams]);
 
   return (
     <Nav>
       <div>
         <NavbarImg alt="pokeapi-logo" src={logoImg} className="navbar-img" />
       </div>
-      <FavoritedButton isFavorited={true}>
+      <Searchbar
+        search={search}
+        setSearch={setSearch}
+        onSearch={onSearchHandler}
+      />
+      <FavoritedButton isFavorited={true} onClick={onFavoritesHandler}>
         {favoritedPokemons.length} &#9829;
       </FavoritedButton>
     </Nav>

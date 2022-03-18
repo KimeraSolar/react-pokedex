@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 
 const SearchbarContainer = styled.div`
@@ -28,16 +29,16 @@ const Button = styled.button`
 `;
 
 const Searchbar = ({ search, setSearch, onSearch }) => {
-  const onChangeHandler = (e) => {
-    setSearch(e.target.value);
+  const onChangeHandler = (event) => {
+    setSearch(event.target.value);
   };
 
   const onSearchHandler = () => {
-    onSearch(search, true);
+    onSearch(search);
   };
 
   const onKeyPressHandler = (event) => {
-    if (event.key === 'Enter') onSearch(search);
+    if (event.key === 'Enter') onSearchHandler();
   };
 
   return (
@@ -50,9 +51,7 @@ const Searchbar = ({ search, setSearch, onSearch }) => {
           value={search}
         />
       </InputWrapper>
-      <div>
-        <Button onClick={onSearchHandler}>Buscar</Button>
-      </div>
+      <Button onClick={onSearchHandler}>Buscar</Button>
     </SearchbarContainer>
   );
 };
