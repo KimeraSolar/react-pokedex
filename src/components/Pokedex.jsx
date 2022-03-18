@@ -89,7 +89,7 @@ const Pokedex = () => {
     try {
       const favorites = await Promise.all(
         trimmedFavoritedPokemons.map(async (pokemon) => {
-          const response = await searchPokemon({ pokemon: pokemon.name });
+          const response = await searchPokemon({ pokemon: pokemon.id });
           const normalizedPokemons = normalizePokemons(response.results);
           return normalizedPokemons[0];
         })
