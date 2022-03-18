@@ -55,7 +55,7 @@ const Pokemon = ({ id, name, types, image }) => {
   const { updateFavoritedPokemons } = useContext(FavoritedContext);
 
   const favoriteHandler = () => {
-    updateFavoritedPokemons(name);
+    updateFavoritedPokemons(name, id);
     setFavorited(!favorited);
   };
 
@@ -63,7 +63,10 @@ const Pokemon = ({ id, name, types, image }) => {
     const favoritedPokemons = JSON.parse(
       window.localStorage.getItem('favoritedPokemon')
     );
-    if (favoritedPokemons.includes(name)) setFavorited(true);
+    const favorite = favoritedPokemons.filter(
+      (pokemon) => pokemon.name === name
+    );
+    if (favorite.length) setFavorited(true);
   }, [name]);
 
   return (

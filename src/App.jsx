@@ -13,21 +13,33 @@ function App() {
   const [favorited, setFavorited] = useState([]);
 
   const loadFavoritedPokemons = () => {
-    const pokemons = JSON.parse(window.localStorage.getItem(favoritedKey));
-    if (pokemons) setFavorited(pokemons);
+    const pokemons = window.localStorage.getItem(favoritedKey);
+    if (pokemons !== null) setFavorited(JSON.parse(pokemons));
+    else window.localStorage.setItem(favoritedKey, JSON.stringify([]));
   };
 
   useEffect(() => {
     loadFavoritedPokemons();
   }, []);
 
-  const updateFavoritedPokemons = (name) => {
-    const updatedFavorites = [...favorited];
-    const favoritedIndex = updatedFavorites.indexOf(name);
+  const updateFavoritedPokemons = (name, id) => {
+    const favoritedIndex = favorited.findIndex(
+      (pokemon) => pokemon.name === name
+    );
+    const updatedFavorites = [];
     if (favoritedIndex >= 0) {
-      updatedFavorites.splice(favoritedIndex, 1);
+      favorited.splice(favoritedIndex, 1);
+      updatedFavorites.push(...favorited);
     } else {
-      updatedFavorites.push(name);
+      const lessThanFavorites = favorited.filter((pokemon) => pokemon.id < id);
+      const greaterThanFavorites = favorited.filter(
+        (pokemon) => pokemon.id > id
+      );
+      updatedFavorites.push(
+        ...lessThanFavorites,
+        { name, id },
+        ...greaterThanFavorites
+      );
     }
     window.localStorage.setItem(favoritedKey, JSON.stringify(updatedFavorites));
     setFavorited(updatedFavorites);

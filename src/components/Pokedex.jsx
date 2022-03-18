@@ -76,12 +76,41 @@ const Pokedex = () => {
     }
   };
 
+  const getFavorites = async (offset, limit) => {
+    setLoading(true);
+    const favoritedPokemons = JSON.parse(
+      window.localStorage.getItem('favoritedPokemon')
+    );
+    setTotalPages(Math.ceil(favoritedPokemons.length / itemsPerPage));
+    const trimmedFavoritedPokemons = favoritedPokemons.slice(
+      offset * limit,
+      (offset + 1) * limit
+    );
+    try {
+      const favorites = await Promise.all(
+        trimmedFavoritedPokemons.map(async (pokemon) => {
+          const response = await searchPokemon({ pokemon: pokemon.name });
+          const normalizedPokemons = normalizePokemons(response.results);
+          return normalizedPokemons[0];
+        })
+      );
+      setPokemons(favorites);
+    } catch (error) {
+      console.log('getFavorites error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const showPokemons = async () => {
     const search = searchParams.get('search');
     const page = searchParams.get('page');
+    const showFavorites = searchParams.get('showFavorites');
     if (!page) return;
     if (search) {
       findPokemon(search, page - 1, itemsPerPage);
+    } else if (showFavorites) {
+      getFavorites(page - 1, itemsPerPage);
     } else {
       fetchPokemons(page - 1, itemsPerPage);
     }

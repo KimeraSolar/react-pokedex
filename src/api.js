@@ -1,6 +1,10 @@
 const API_URL = 'http://localhost:3003';
 
-export const searchPokemon = async ({ pokemon, offset, limit }) => {
+export const searchPokemon = async ({
+  pokemon,
+  offset = 0,
+  limit = 30,
+} = {}) => {
   try {
     let url = `${API_URL}/search-pokemon?pokemon=${pokemon}&offset=${
       limit * offset
@@ -12,7 +16,7 @@ export const searchPokemon = async ({ pokemon, offset, limit }) => {
   }
 };
 
-export const getPokemons = async ({ offset = 0, limit = 50 } = {}) => {
+export const getPokemons = async ({ offset = 0, limit = 30 } = {}) => {
   try {
     const url = `${API_URL}/get-pokemons?limit=${limit}&offset=${
       limit * offset
