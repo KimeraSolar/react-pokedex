@@ -79,6 +79,7 @@ const Pokedex = () => {
   const showPokemons = async () => {
     const search = searchParams.get('search');
     const page = searchParams.get('page');
+    if (!page) return;
     if (search) {
       findPokemon(search, page - 1, itemsPerPage);
     } else {
