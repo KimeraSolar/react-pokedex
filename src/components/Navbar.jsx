@@ -15,6 +15,7 @@ const Nav = styled.nav`
 
 const NavbarImg = styled.img`
   width: 160px;
+  cursor: pointer;
 `;
 
 const Navbar = () => {
@@ -43,6 +44,10 @@ const Navbar = () => {
     setSearchParams(searchParams);
   };
 
+  const onHomeHandler = () => {
+    navigate('/dex?page=1');
+  };
+
   useEffect(() => {
     if (!search) navigate('/dex?page=1');
   }, []);
@@ -56,7 +61,12 @@ const Navbar = () => {
   return (
     <Nav>
       <div>
-        <NavbarImg alt="pokeapi-logo" src={logoImg} className="navbar-img" />
+        <NavbarImg
+          alt="pokeapi-logo"
+          src={logoImg}
+          className="navbar-img"
+          onClick={onHomeHandler}
+        />
       </div>
       <Searchbar
         search={search}
