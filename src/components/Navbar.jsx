@@ -38,10 +38,7 @@ const Navbar = () => {
 
   const onFavoritesHandler = () => {
     setSearch('');
-    searchParams.delete('search');
-    searchParams.set('showFavorites', true);
-    searchParams.set('page', 1);
-    setSearchParams(searchParams);
+    navigate('/dex?showFavorites=true&page=1');
   };
 
   const onHomeHandler = () => {
