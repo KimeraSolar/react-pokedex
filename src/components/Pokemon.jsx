@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import FavoritedContext from '../contexts/favoritedContext';
 import FavoritedButton from './FavoritedButton';
@@ -7,6 +8,7 @@ const Card = styled.div`
   display: flex;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 3px;
+  cursor: pointer;
 `;
 
 const CardBody = styled.div`
@@ -50,13 +52,17 @@ const TypeName = styled.div`
 `;
 
 const Pokemon = ({ id, name, types, image }) => {
+  const navigate = useNavigate();
   const [favorited, setFavorited] = useState(false);
-
   const { updateFavoritedPokemons } = useContext(FavoritedContext);
 
   const favoriteHandler = () => {
     updateFavoritedPokemons(name, id);
     setFavorited(!favorited);
+  };
+
+  const onClickHandler = () => {
+    navigate(`/pokemon?id=${id}`);
   };
 
   useEffect(() => {
@@ -70,7 +76,7 @@ const Pokemon = ({ id, name, types, image }) => {
   }, [name]);
 
   return (
-    <Card>
+    <Card onClick={onClickHandler}>
       <ImageContainer>
         <Image src={image} alt={name} />
       </ImageContainer>
