@@ -30,9 +30,9 @@ const Navbar = () => {
 
   const onSearchHandler = (search) => {
     if (search) {
-      setSearchParams({ search, page: 1 });
+      navigate(`/dex?search=${search}&page=1`);
     } else {
-      setSearchParams({ page: 1 });
+      navigate(`/dex?page=1`);
     }
   };
 
