@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getPokemonDetails } from '../api';
+import FavoritedContext from '../contexts/favoritedContext';
+import FavoritedButton from './FavoritedButton';
 
 const Container = styled.div`
   width: 700px;
@@ -54,10 +56,22 @@ const PokemonDetails = () => {
   const [searchParams] = useSearchParams();
   const [details, setDetails] = useState({});
   const [loading, setLoading] = useState(true);
+  const [favorited, setFavorited] = useState(false);
+  const { updateFavoritedPokemons } = useContext(FavoritedContext);
 
   useEffect(() => {
     getDetails();
   }, [searchParams]);
+
+  useEffect(() => {
+    const favoritedPokemons = JSON.parse(
+      window.localStorage.getItem('favoritedPokemon')
+    );
+    const favorite = favoritedPokemons.filter(
+      (pokemon) => pokemon.name === details.name
+    );
+    if (favorite.length) setFavorited(true);
+  }, [details]);
 
   const getDetails = async () => {
     setLoading(true);
@@ -68,6 +82,11 @@ const PokemonDetails = () => {
     setLoading(false);
   };
 
+  const favoriteHandler = () => {
+    updateFavoritedPokemons(details.name, details.id);
+    setFavorited(!favorited);
+  };
+
   return (
     <Container>
       {loading ? (
@@ -76,7 +95,12 @@ const PokemonDetails = () => {
         <>
           <Artwork src={details.artwork} alt={details.name} />
           <DexNumber>#{details.id}</DexNumber>
-          <Title>{details.name?.replace('-', ' ')}</Title>
+          <Title>
+            {details.name?.replace('-', ' ')}{' '}
+            <FavoritedButton isFavorited={favorited} onClick={favoriteHandler}>
+              &#9829;
+            </FavoritedButton>
+          </Title>
           <Type>
             {details.types?.map((type) => (
               <TypeName>{type}</TypeName>
