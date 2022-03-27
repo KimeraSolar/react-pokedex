@@ -27,3 +27,13 @@ export const getPokemons = async ({ offset = 0, limit = 30 } = {}) => {
     console.log('Error:', error);
   }
 };
+
+export const getPokemonDetails = async (id) => {
+  try {
+    const url = `${API_URL}/get-pokemon-details?id=${id}`;
+    const result = await fetch(url);
+    return await result.json();
+  } catch (error) {
+    console.log('Error:', error);
+  }
+};
