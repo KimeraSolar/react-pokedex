@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import FavoritedContext from '../contexts/favoritedContext';
 import FavoritedButton from './FavoritedButton';
@@ -20,10 +20,11 @@ const NavbarImg = styled.img`
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { favoritedPokemons } = useContext(FavoritedContext);
   const [search, setSearch] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const logoImg =
     'https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png';
@@ -46,7 +47,8 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    if (!search) navigate('/dex?page=1');
+    if (location.pathname === '/') return navigate('/dex?page=1');
+    if (!searchParams.values.length) navigate(location.pathname + '?page=1');
   }, []);
 
   useEffect(() => {

@@ -102,8 +102,8 @@ const PokemonDetails = () => {
             </FavoritedButton>
           </Title>
           <Type>
-            {details.types?.map((type) => (
-              <TypeName>{type}</TypeName>
+            {details.types?.map((type, index) => (
+              <TypeName key={index}>{type}</TypeName>
             ))}
           </Type>
           <p>Altura: {details.height / 10}m</p>
