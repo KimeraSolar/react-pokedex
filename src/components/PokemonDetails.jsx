@@ -9,31 +9,37 @@ const Container = styled.div`
   width: 700px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  align-items: center;
   text-align: center;
   line-height: 2rem;
 `;
 
 const Artwork = styled.img`
-  width: 500px;
-  height: 500px;
+  width: 300px;
+  height: 300px;
   margin: 0 auto;
+`;
+
+const DetailsContainer = styled.div`
+  width: 70%;
+  text-align: center;
 `;
 
 const Title = styled.h3`
   font-size: 1.75rem;
   text-transform: capitalize;
-  text-align: center;
 `;
 
 const DexNumber = styled.span`
   font-size: 1.25rem;
-  vertical-align: text-top;
 `;
 
 const Type = styled.div`
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   margin: 0 auto;
 `;
 
@@ -94,21 +100,26 @@ const PokemonDetails = () => {
       ) : (
         <>
           <Artwork src={details.artwork} alt={details.name} />
-          <DexNumber>#{details.id}</DexNumber>
-          <Title>
-            {details.name?.replace('-', ' ')}{' '}
-            <FavoritedButton isFavorited={favorited} onClick={favoriteHandler}>
-              &#9829;
-            </FavoritedButton>
-          </Title>
-          <Type>
-            {details.types?.map((type, index) => (
-              <TypeName key={index}>{type}</TypeName>
-            ))}
-          </Type>
-          <p>Altura: {details.height / 10}m</p>
-          <p>Peso: {details.weight / 10}kg</p>
-          <p>{displayGenderRate(details.gender_rate)}</p>
+          <DetailsContainer>
+            <DexNumber>#{details.id}</DexNumber>
+            <Title>
+              {details.name?.replace('-', ' ')}{' '}
+              <FavoritedButton
+                isFavorited={favorited}
+                onClick={favoriteHandler}
+              >
+                &#9829;
+              </FavoritedButton>
+            </Title>
+            <Type>
+              {details.types?.map((type, index) => (
+                <TypeName key={index}>{type}</TypeName>
+              ))}
+            </Type>
+            <p>Altura: {details.height / 10}m</p>
+            <p>Peso: {details.weight / 10}kg</p>
+            <p>{displayGenderRate(details.gender_rate)}</p>
+          </DetailsContainer>
         </>
       )}
     </Container>
